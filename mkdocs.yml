@@ -1,8 +1,8 @@
-site_name: ML-Pimenta
+site_name: Machine Learning
 site_author: Luiz Felipe Pimenta Berrettini
-site_url: https://pimentabrrt.github.io/ml-pimenta
-repo_url: https://github.com/PimentaBrrt/ml-pimenta
-repo_name: pimentabrrt/ml-pimenta
+site_url: https://pimentabrrt.github.io/ml
+repo_url: https://github.com/PimentaBrrt/ml
+repo_name: pimentabrrt/ml
 docs_dir: docs
 site_dir: site
 
@@ -136,9 +136,11 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Projetos:
+  - Projetos Individuais:
     - Projeto 1 - Decision Tree: ./decision-tree/main.md
     - Projeto 2 - KNN: ./knn/main.md
     - Projeto 3 - K-Means: ./k-means/main.md
     - Projeto 4 - Métricas e Avaliação do KNN e K-Means: ./metrics/main.md
     - Projeto 5 - Random Forest: ./random-forest/main.md
+  - Projetos em Grupo:
+    - Projeto I : https://pimentabrrt.github.io/ml-grupo-404/
