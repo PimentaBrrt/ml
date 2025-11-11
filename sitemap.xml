@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/</loc>
+         <loc>https://pimentabrrt.github.io/ml/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/decision-tree/main/</loc>
+         <loc>https://pimentabrrt.github.io/ml/decision-tree/main/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/k-means/main/</loc>
+         <loc>https://pimentabrrt.github.io/ml/k-means/main/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/knn/main/</loc>
+         <loc>https://pimentabrrt.github.io/ml/knn/main/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/metrics/main/</loc>
+         <loc>https://pimentabrrt.github.io/ml/metrics/main/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
     <url>
-         <loc>https://pimentabrrt.github.io/ml-pimenta/random-forest/main/</loc>
+         <loc>https://pimentabrrt.github.io/ml/random-forest/main/</loc>
          <lastmod>2025-11-11</lastmod>
     </url>
 </urlset>
