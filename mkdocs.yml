@@ -136,11 +136,14 @@ extra_javascript:
 
 nav:
   - Home: index.md
-  - Projetos Individuais:
+  - Projetos Individuais de Machine Learning:
     - Projeto 1 - Decision Tree: ./decision-tree/main.md
     - Projeto 2 - KNN: ./knn/main.md
     - Projeto 3 - K-Means: ./k-means/main.md
     - Projeto 4 - Métricas e Avaliação do KNN e K-Means: ./metrics/main.md
     - Projeto 5 - Random Forest: ./random-forest/main.md
+  - Projetos Individuais Extras:
+    - Projeto 6 - Page Rank: ./page-rank/main.md
+    - Projeto 7 - PySpark: ./pyspark/main.md
   - Projetos em Grupo:
     - Projeto I : https://pimentabrrt.github.io/ml-grupo-404/
