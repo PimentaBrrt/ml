@@ -15,7 +15,9 @@ Projetos de machine learning realizados em *2025.2*, orientados e supervisionado
 - [X] KNN - Data 16/09/2025
 - [X] K-means e Métricas de Avaliação - Data 28/09/2025
 - [X] Random Forest - Data 28/10/2025
-- [] Page Rank e PySpark - Data 18/11/2025
+- [X] SVM - Data 04/12/2025
+- [ ] Page Rank - Data 04/12/2025
+- [ ] PySpark - Data 04/12/2025
 
 ## Referências
 

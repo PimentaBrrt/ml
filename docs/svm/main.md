@@ -1,7 +1,8 @@
-# Modelo de Machine Learning - KNN
+# Modelo de Machine Learning - SVM
 
 Para esse projeto, foi utilizado um dataset obtido no [**Kaggle**](https://kaggle.com){:target='_blank'}.
 Os dados usados podem ser baixados [**aqui**](https://www.kaggle.com/datasets/youssefaboelwafa/hotel-booking-cancellation-prediction/data){:target='_blank'}.
+O dataset desse projeto é o mesmo do projeto do **KNN**. Por isso, as três primeiras etapas são muito semelhantes (nesse caso, vamos utilizar apenas o modelo 1 dos dois testados no outro projeto com essa base de dados).
 
 ## Objetivo
 
@@ -277,38 +278,10 @@ Está seção será divida para cada tipo de variável, entre variáveis quantit
 
 Através das análises, foi possível alcançar uma compreensão mais aprofundada do funcionamento de cada uma das variáveis no dataset, além de haver insights valiosos nesses gráficos. Esses dados serão essenciais para a escolha das variáveis que serão utilizadas no modelo.
 
-### Etapa 2 - Pré-processamento e Divisão de Dados
+### Etapa 2 - Pré-processamento 
 
-Neste projeto, após um estudo do pré-processamento e divisão de dados, foram considerados dois modelos distintos de pré-processamento. O primeiro modelo faz, primeiro, o pré-processamento, utilizando todo o dataset para treinar o modelo de predição. O segundo modelo cria o pré-processamento apenas com os dados de treinamento, evitando que o modelo tenha acesso indireto aos dados de teste, evitando [**data leakage**](https://www.kaggle.com/code/alexisbcook/data-leakage/tutorial){:target='_blank'}.
-
-O primeiro modelo utiliza os dados de teste para realizar a padronização e substituição de valores nulos no dataset inteiro, fazendo com que, indiretamente, o modelo tenha acesso aos dados de teste. Esse problema pode afetar a acurácia do modelo com enviesamento, fazendo com que sua eficácia real seja diferente da testada. O segundo modelo trata os dados de teste como dados que nunca foram acessados pelo modelo. O pré-processamento, depois de feito a partir dos dados de treino, será aplicado aos dados de teste, inserindo-os no mesmo domínio do modelo para que possam ser realizadas predições. A hipótese principal é de que a acurácia do segundo modelo será um pouco menor, mas o modelo terá menos viés.
-
-Abaixo, estão o diagramas de sequência representando cada modelo:
-
-#### Modelo 1 - Pré-processamento -> Divisão dos Dados
-
-``` mermaid
-flowchart TD
-    A[Exploração de Dados] --> B[Pré-processamento]
-    B --> C{Divisão dos Dados}
-    C -->|80% dos dados| D[Treino] --> F[Treinamento do modelo]
-    C -->|20% dos dados| E[Teste] --> G[Avaliação do modelo]
-    F --> G
-```
-
-#### Modelo 2 Divisão dos Dados -> Pré-processamento
-
-``` mermaid
-flowchart TD
-    A[Exploração de Dados] --> B{Divisão dos Dados}
-    B -->|Teste<br>20% dos dados| PTest[Pré-processamento]
-    B -->|Treino<br>80% dos dados| PTrain[Pré-processamento]
-    PTrain --> Train[Treinamento]
-    Train --> G
-    PTest --> G[Avaliação do modelo]
-```
-
-Nos dois modelos, o pré-processamento é o mesmo. O que muda é o conjunto de dados em que ele é aplicado, sendo aplicado em todo o dataset no modelo 1 e apenas no conjunto de treino no modelo 2.
+Diferentemente do projeto do **KNN**, aqui, iremos aplicar apenas um dos modelos, aquele que foi ensinado em aula. Ou seja, primeiro vem o pré-processamento completo e, depois,
+a divisão dos dados.
 
 #### 1° Passo: Identificação e tratamento de valores nulos
 
@@ -331,9 +304,7 @@ df = df.drop(columns=["Booking_ID", "date of reservation"])
 #### 3° Passo: Codificação de variáveis categóricas
 
 O terceiro passo se consiste na codificação das variáveis categóricas. Essas são: `type of meal`, `room type` e `market segment type`.
-Considerando a forma como a técnica do KNN funciona, calculando a distância euclidiana entre pontos para predizer, a técnica de label encoding seria ruim, pois os valores numéricos arbitrários poderiam criar distâncias falsas entre as categorias. Por isso, utilizaremos a técnica de One-Hot Encoding para codificar essas variáveis, utilizando o *OneHotEncoder()* do `scikit-learn`.
-
-*Modelo 1:*
+Utilizaremos a técnica de One-Hot Encoding para codificar essas variáveis, utilizando o *OneHotEncoder()* do `scikit-learn`.
 
 ``` python exec="0"
 
@@ -351,32 +322,10 @@ X = pd.concat([X.drop(columns=categorical_cols), encoded_df], axis=1)
 
 ```
 
-*Modelo 2:*
-
-``` python exec="0"
-
-from sklearn.preprocessing import OneHotEncoder
-
-categorical_cols = ["type of meal", "room type", "market segment type"]
-
-X = df.drop("booking status", axis=1)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-encoder = OneHotEncoder(drop="first", sparse_output=False)
-encoder.fit(X_train[categorical_cols])
-
-X_train_encoded = encoder.transform(X_train[categorical_cols])
-X_test_encoded = encoder.transform(X_test[categorical_cols])
-
-```
-
 #### 4° Passo: Padronização das features numéricas 
 
 Em seguida, é necessária a padronização das features numéricas na base. Ao invés da normalização, será utilizada a técnica de padronização devido aos outliers nas features numéricas, principalmente as variáveis `lead time` e `average price`, que desbalanceariam o cálculo de distâncias se apenas normalizadas.
 Para a padronização, utilizaremos o *StandardScaler()* do `scikit-learn`.
-
-*Modelo 1:*
 
 ``` python exec="0"
 
@@ -389,34 +338,16 @@ numeric_cols = ["number of adults", "number of children", "number of weekend nig
 
 X = df.drop("booking status", axis=1)
 
-for col in numeric_cols:
-    X[col] = scaler.fit_transform(X[[col]])
+X_scaled = scaler.fit_transform(X[numeric_cols])
+scaled_df = pd.DataFrame(X_scaled, columns=numeric_cols, index=X.index)
 
-```
-
-*Modelo 2:*
-
-``` python exec="0"
-
-from sklearn.preprocessing import StandardScaler
-
-numeric_cols = ["number of adults", "number of children", "number of weekend nights", 
-                "number of week nights", "lead time", "P-C", "P-not-C", 
-                "average price", "special requests"]
-
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-scaler.fit(X_train)
-X_train_scaled = scaler.transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+X = pd.concat([X.drop(columns=numeric_cols), scaled_df], axis=1)
 
 ```
 
 #### 5° Passo: Codificação da variável alvo
 
 Por fim, vamos codificar a variável alvo `booking status` utilizando a técnica de label encoding. Ou seja, após esse passo, "Not_Canceled" vai assumir o valor 1 e "Canceled" o valor 0. Aqui, essa técnica pode ser utilizada, pois essa é a variável alvo, e não será utilizada no cálculo das distâncias. Para codificar, utilizaremos o *LabelEncoder()* do `scikit-learn`.
-
-*Modelo 1 e 2:*
 
 ``` python exec="0"
 
@@ -427,7 +358,7 @@ y = l_encoder.fit_transform(df["booking status"])
 
 ```
 
-#### Divisão dos dados
+### Etapa 3 - Divisão dos dados
 
 Como explicado anteriormente, essa etapa será realizada em momentos distintos dependendo do modelo utilizado. No primeiro modelo, esta etapa vem depois de todo o pré-processamento. No segundo modelo, esta etapa vem antes do pré-processamento.
 
@@ -457,161 +388,125 @@ Para realizar a divisão, foi utilizada a função *train_test_split()* do `scik
 
 Esta divisão adequada é de extrema importância, pois ajuda a evitar *overfitting*.
 
-### Etapa 3 - Treinamento dos Modelos
+### Etapa 4 - Treinamento do Modelo
 
-Agora, será realizado o treinamento dos modelos. O objetivo dessa etapa é ensinar o algoritmo a reconhecer padrões nos dados que são fornecidos, e determinar se uma reserva será, ou não, cancelada de acordo com os dados das outras variáveis na base.
+Para o treinamento do modelo, obviamente, utilizaremos a técnica de **SVM (Support Vector Machines)**. Contudo, temos que definir uma solução de SVM para nossa base: um kernel linear, aplicado utilizando o **LinearSVC**, ou um kernel não-linear, a **RBF (Radial Basis Function)**. O dataset é grande, e possui aproximadamente 37 mil amostras. 
 
-Para fazer a visualização em gráfico dos modelos, foi aplicado um **PCA** para reduzir a dimensionalidade e possibilitar a criação do gráfico.
+A **RBF** possui complexidade algorítmica de **O(n²)** e demanda cálculos intensivos no espaço transformado para determinar o hiperplano de separação com um *SVC (Support Vector Classifier)*, enquanto a solução linear possui muito mais velocidade, é projetada para lidar com datasets grandes e possui complexidade quase linear em relação ao número de amostras. 
 
-#### Resultado dos treinamentos
+Ou seja, **RBF** é bem mais lento e exige mais memória, porém pode se sair melhor. Além disso, kernels não-lineares tendem ao *overfitting*. Então, vamos testar ambos kernels. Para compará-los, vamos obter suas métricas de avaliação e aplicar *cross-validation*.
 
-*Modelo 1:*
+=== "Modelo utilizando **RBF**"
 
-=== "KNN - Modelo 1"
+    === "Saída"
 
-    <figure markdown="span">
-        ![KNN modelo 1](../images/knn_modelo1.svg)
-        <figcaption>Acurácia: 0.8541</figcaption>
-    </figure>
+        ```python exec="1"
+        --8<-- "docs/svm/training-rbf.py"
+        ```
 
-=== "Código"
+    === "Código"
 
-    ```python exec="0"
-    --8<-- "docs/knn/training_p-s.py"
-    ```
+        ```python exec="0"
+        --8<-- "docs/svm/training-rbf.py"
+        ```
 
-*Modelo 2:*
+=== "Modelo utilizando solução **linear**"
 
-=== "KNN - Modelo 2"
+    === "Saída"
 
-    <figure markdown="span">
-        ![KNN modelo 2](../images/knn_modelo2.svg)
-        <figcaption>Acurácia: 0.8521</figcaption>
-    </figure>
+        ```python exec="1"
+        --8<-- "docs/svm/training-linear.py"
+        ```
 
-=== "Código"
+    === "Código"
 
-    ```python exec="0"
-    --8<-- "docs/knn/training_s-p.py"
-    ```
+        ```python exec="0"
+        --8<-- "docs/svm/training-linear.py"
+        ```
 
-### Etapa 4 - Avaliação dos modelos
+### Etapa 5 - Avaliação dos Modelos
 
-#### Matrizes de confusão
+Agora, vamos avaliar os modelos para definir qual será mantido. Primeiramente, vamos obter as matrizes de confusão.
 
-Primeiramente, vamos observar as matrizes de confusão de ambos os modelos. A matriz de confusão consegue nos oferecer diversas métricas de qualidade do modelo, como o número de previsões correta para positivos e negativos, os falso positivos, falso negativos, a precisão, especificidade, dentre outras métricas.
+#### Matrizes de Confusão
 
-*Modelo 1:*
+##### Modelo RBF
 
-=== "Matriz de confusão - Modelo 1"
+=== "Matriz de confusão - Modelo RBF"
 
-    ![CM KNN modelo 1](../images/cm_knn_modelo1.svg)
+    ![CM SVM RBF](../images/cm-rbf.svg)
 
 === "Código"
 
     ```python exec="0"
-    --8<-- "docs/knn/confusion_p-s.py"
+    --8<-- "docs/svm/cm-rbf.py"
     ```
 
-*Modelo 2:*
+##### Modelo Linear
 
-=== "Matriz de confusão - Modelo 2"
+=== "Matriz de confusão - Modelo Linear"
 
-    ![CM KNN modelo 2](../images/cm_knn_modelo2.svg)
+    ![CM SVM Linear](../images/cm-linear.svg)
 
 === "Código"
 
     ```python exec="0"
-    --8<-- "docs/knn/confusion_s-p.py"
+    --8<-- "docs/svm/cm-linear.py"
     ```
 
-#### Acurácia dos modelos
+Como é possível observar na saída dos treinamentos, o modelo **RBF** obteve acurácia de **0.828**, enquanto o modelo linear obteve acurácia de **0.80**. Para um dataset como esse, é uma diferença significativa.
 
-Os modelos tiveram uma acurácia muito próxima, ambas decentes, de 85,41% para o modelo 1 e 85,21% para o modelo 2.
+Além disso, todas as outras métricas, como recall e precisão, também foram maiores no modelo **RBF**. Ou seja, tanto para casos positivos quanto para casos negativos, o modelo utilizando o kernel **RBF** se saiu melhor, com menos falsos positivos, menos falsos negativos, mais verdadeiros positivos e mais verdadeiros negativos, como é possível observar nas matrizes de confusão.
 
-#### Análise das visualizações
+Contudo, antes de darmos qualquer tipo de certeza, vamos aplicar uma validação cruzada para checar a estabilidade dos modelos.
 
-*Modelo 1:*
+#### Validação Cruzada
 
-- Padrão visual: Separação mais "limpa" entre classes
+=== "Saída"
 
-- Componentes principais: Distribuição mais organizada
+    ```python exec="1"
+    --8<-- "docs/svm/cross-val.py"
+    ```
 
-*Modelo 2:*
+=== "Código"
 
-- Padrão visual: Separação mais realista entre classes
+    ```python exec="0"
+    --8<-- "docs/svm/cross-val.py"
+    ```
 
-- Componentes principais: Sobreposição natural entre clusters
+Apesar da maior complexidade computacional do kernel **RBF**, a validação cruzada mostrou que ele apresenta desempenho consistentemente superior ao **LinearSVC**.
+O **RBF** obteve média de acurácia de *82,98%*, contra *79,89%* do **modelo linear**, com baixa variabilidade entre os folds e sem sinais de *overfitting*.
 
-#### Avaliação detalhada entre os modelos
+### Etapa 6 - Relatório Final
 
-##### Modelo 1
+#### Comparação Final dos Modelos
 
-*Pontos Fortes:*
+##### SVM com Kernel RBF (SVC)
 
-- Acurácia ligeiramente superior (86.04% vs 85.80%)
+- Realiza transformação não-linear dos dados.
 
+- Captura relações complexas presentes no dataset.
 
-- Separação visual mais clara no espaço PCA
+*Contudo, apresenta:*
 
-*Pontos Fracos:*
+- Alto custo computacional (complexidade **O(n²)**),
 
-- Performance artificialmente inflada
+- Maior tempo de treinamento.
 
-- Baixa confiabilidade para dados novos
+- Menor escalabilidade para bases muito grandes.
 
-- Não representa cenários do mundo real
+##### SVM Linear (LinearSVC)
 
-##### Modelo 2
+- Consideravelmente mais rápido e escalável.
 
-*Pontos Fortes:*
+- Adequado para datasets extensos, especialmente após one-hot encoding.
 
-- Performance realista e confiável
+- Complexidade quase linear.
 
-- Melhor generalização para dados não vistos
+- Desempenho competitivo, embora inferior ao RBF neste estudo específico.
 
-- Aplicável em ambiente de produção
+##### Escolha Final de Modelo
 
-*Pontos Fracos:*
+Como este trabalho tem caráter experimental e prioriza desempenho preditivo em vez de custo computacional, o **modelo SVM com kernel RBF** será mantido como escolha final. Ele apresentou aproximadamente 3% de acurácia a mais que o LinearSVC e se mostrou estável durante a validação cruzada.
 
-- Performance ligeiramente inferior em números absolutos
-
-- Separação menos clara no espaço PCA
-
-### Etapa 5 - Relatório Final
-
-#### Recomendações e Conclusões
-
-É recomendado o Modelo 2 (sem data leakage) porque:
-
-- Fornece estimativas realistas de performance
-
-- É mais robusto para dados novos
-
-- Evita surpresas desagradáveis em produção
-
-- Mantém performance muito similar (diferença de apenas 0.2%)
-
-#### Pontos Importantes Observados
-
-- Data leakage cria uma falsa sensação de segurança
-
-- Diferenças pequenas em métricas podem indicar problemas grandes
-
-- A validação rigorosa é essencial para modelos confiáveis
-
-- Performance visual nem sempre se traduz em performance real
-
-#### Possíveis próximos passos e melhorias
-
-- Validar ambos modelos em um conjunto de dados totalmente novo
-
-- Implementar o Modelo 2 em ambiente controlado
-
-- Monitorar performance contínua em produção
-
-- Considerar técnicas de regularização para melhorar generalização
-
-#### Conclusão Final
-
-Embora o Modelo 1 apresente métricas ligeiramente superiores, o Modelo 2 é significativamente mais confiável e adequado para implantação em ambiente real devido à ausência de data leakage.
+Entretanto, em aplicações reais de negócio, onde **tempo de treinamento**, **custo computacional** e **escalabilidade** são *fatores críticos*, esse ganho de performance pode não justificar o custo. Nesses cenários, o **SVM Linear** se torna a opção mais apropriada.
