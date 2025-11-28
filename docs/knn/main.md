@@ -308,7 +308,7 @@ flowchart TD
     PTest --> G[Avaliação do modelo]
 ```
 
-Nos dois modelos, o pré-processamento é o mesmo. O que muda é o conjunto de dados em que ele é aplicado, sendo aplicado em todo o dataset no modelo 1 e apenas no conjunto de treino no modelo 2.
+A diferença entre os modelos é que o pré-processamento é gerado de formas diferentes, apesar de possuir a mesma estrutura. No modelo 1, o pré-processamento é gerado a partir de todos os dados da base, e depois vem a divisão dos dados. No modelo 2, o pré-processamento é gerado a partir apenas do conjunto de treino, e depois aplicado no conjunto de teste para trazer os dados de teste para o mesmo universo e possibilitar as predições. Os passos seguidos pelo pré-processamento, em ambos os casos, são os mesmos:
 
 #### 1° Passo: Identificação e tratamento de valores nulos
 
@@ -527,7 +527,7 @@ Primeiramente, vamos observar as matrizes de confusão de ambos os modelos. A ma
 
 #### Acurácia dos modelos
 
-Os modelos tiveram uma acurácia muito próxima, ambas decentes, de 85,41% para o modelo 1 e 85,21% para o modelo 2.
+Os modelos tiveram uma acurácia muito próxima, ambas decentes, de **85,41%** para o *Modelo 1* e **85,21%** para o *Modelo 2*.
 
 #### Análise das visualizações
 
@@ -547,71 +547,30 @@ Os modelos tiveram uma acurácia muito próxima, ambas decentes, de 85,41% para 
 
 ##### Modelo 1
 
-*Pontos Fortes:*
+- Acurácia ligeiramente superior **(85.41% vs 85.21%)**
 
-- Acurácia ligeiramente superior (86.04% vs 85.80%)
+- Separação visual um pouco mais clara no espaço **PCA**
 
-
-- Separação visual mais clara no espaço PCA
-
-*Pontos Fracos:*
-
-- Performance artificialmente inflada
-
-- Baixa confiabilidade para dados novos
-
-- Não representa cenários do mundo real
+- Performance artificialmente inflada (Mesmo que pouco)
 
 ##### Modelo 2
 
-*Pontos Fortes:*
-
 - Performance realista e confiável
 
-- Melhor generalização para dados não vistos
+- Performance *ligeiramente inferior* em números absolutos
 
-- Aplicável em ambiente de produção
-
-*Pontos Fracos:*
-
-- Performance ligeiramente inferior em números absolutos
-
-- Separação menos clara no espaço PCA
+- Separação um pouco menos clara no espaço **PCA**
 
 ### Etapa 5 - Relatório Final
 
-#### Recomendações e Conclusões
-
-É recomendado o Modelo 2 (sem data leakage) porque:
-
-- Fornece estimativas realistas de performance
-
-- É mais robusto para dados novos
-
-- Evita surpresas desagradáveis em produção
-
-- Mantém performance muito similar (diferença de apenas 0.2%)
-
-#### Pontos Importantes Observados
-
-- Data leakage cria uma falsa sensação de segurança
-
-- Diferenças pequenas em métricas podem indicar problemas grandes
-
-- A validação rigorosa é essencial para modelos confiáveis
-
-- Performance visual nem sempre se traduz em performance real
+Nesse estudo, pudemos observar uma diferença mínima entre os dois modelos, com apenas **14 amostras** sendo classificadas diferentemente entre eles, representando uma redução de **0,2%** de acurácia no *Modelo 2* comparado ao *Modelo 1*. 
 
 #### Possíveis próximos passos e melhorias
 
 - Validar ambos modelos em um conjunto de dados totalmente novo
 
-- Implementar o Modelo 2 em ambiente controlado
-
-- Monitorar performance contínua em produção
-
 - Considerar técnicas de regularização para melhorar generalização
 
 #### Conclusão Final
 
-Embora o Modelo 1 apresente métricas ligeiramente superiores, o Modelo 2 é significativamente mais confiável e adequado para implantação em ambiente real devido à ausência de data leakage.
+Embora o *Modelo 1* apresente métricas ligeiramente superiores, o *Modelo 2* é mais confiável devido à ausência de *data leakage*. Contudo, a diferenciação foi mínima, e não é possível cravar, sem testar com novos dados, que o *Modelo 2* seria, de fato, mais adequado para implantação em ambiente real.

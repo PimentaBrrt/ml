@@ -192,9 +192,9 @@ O PCA aplicado para visualização explica **98.80%** da variância total dos da
 
 ##### Padrão de Agrupamento Natural
 
-- O K-means identificou 3 grupos naturais baseados apenas nas medidas físicas, não nas espécies biológicas
+- O **K-means** identificou *3 grupos naturais* baseados apenas nas medidas físicas, não nas espécies biológicas
 
-- Isso revela que diferentes espécies compartilham perfis dimensionais similares
+- Isso revela que *diferentes espécies* compartilham *perfis dimensionais similares*
 
 ##### Relação com Espécies Reais
 
@@ -206,18 +206,16 @@ A análise de correspondência mostra que:
 
 ### Etapa 5 - Relatório Final
 
-O projeto de clustering foi bem-sucedido em identificar padrões naturais nas medidas físicas de peixes. O K-means com K=3 demonstrou ser a configuração ideal para estes dados.
+O projeto de clustering foi **bem-sucedido** em identificar padrões naturais nas medidas físicas de peixes. O **K-means** com $k=3$ demonstrou ser a configuração ideal para estes dados.
 
 #### Possíveis Melhorias
 
-- Análise discriminante: Verificar se as espécies são linearmente separáveis
+- **Matriz de confusão clusters×espécies:** Quantificar a sobreposição entre agrupamentos
 
-- Matriz de confusão clusters×espécies: Quantificar a sobreposição entre agrupamentos
-
-- Análise de features: Identificar quais medidas mais contribuem para cada cluster
+- **Análise de features:** Identificar quais medidas mais contribuem para cada cluster
 
 #### Considerações Finais
 
-O modelo K-means demonstrou ser eficaz para identificar padrões de tamanho em peixes baseado em suas medidas físicas. A descoberta mais interessante foi que o agrupamento natural dos dados (3 clusters) não corresponde às 9 espécies biológicas, revelando que diferentes espécies podem ter perfis dimensionais similares.
+O modelo **K-means** demonstrou ser eficaz para identificar padrões de tamanho em peixes baseado em suas medidas físicas. A descoberta mais interessante foi que o agrupamento natural dos dados (3 clusters) não corresponde às 9 espécies biológicas, revelando que diferentes espécies podem ter perfis dimensionais similares.
 
-O Silhouette Score de 0.6284 confirma uma estrutura de clusters bem definida, com boa separação entre grupos e alta coesão interna.
+O *Silhouette Score* de **0.6284** confirma uma estrutura de clusters bem definida, com *boa separação* entre grupos e *alta coesão interna*.

@@ -149,7 +149,7 @@ O objetivo do projeto é realizar uma predição da relevância dos personagens 
 
 #### 1° Passo: Criação de **`book_freq`**
 
-Primeiramente, é importante criar uma variável representante para a frequência em livros para cada personagem. Ao invés de utilizar 5 variáveis **book** diferentes, criaremos a variável **boof_freq**. Para isso, será feita a soma dos 5 valores das variáveis **book**, o que resultará em um intervalo de [0,5]. Contudo, para que esse valores sejam normalizados, e possuam um número entre 0 e 1, é feita a divisão desse resultado por 5.
+Primeiramente, é importante criar uma variável representante para a frequência em livros para cada personagem. Ao invés de utilizar 5 variáveis **book** diferentes, criaremos a variável `book_freq`. Para isso, será feita a soma dos 5 valores das variáveis `book`, o que resultará em um intervalo de [0,5]. Contudo, para que esse valores sejam normalizados, e possuam um número entre 0 e 1, será feita a divisão desse resultado por 5.
 
 ``` python 
     
@@ -371,13 +371,13 @@ Contudo, há limitações no modelo:
 
 - **Features Redudantes:** **has_mother**, **has_father** e **has_heir** possuem importância nula para a predição do sistema
 
-- **Possível viés:** É possível que, pela variável **relevance_score** ter sido manualmente estabelecida, pode haver viés
+- **Possível viés:** Devido ao fato de que a variável **relevance_score** foi manualmente estabelecida, pode haver viés
 
 #### Possíveis melhorias
 
-- **Validação de `plod`:** Durante a primeira etapa, na exploração da base de dados, poderia ter sido feita uma *Regressão Linear Múltipla* completa para validar completamente a hipótese de que **plod** é a probabilidade de morte do personagem.
-
 - **Remoção de features desnecessárias:** As features relacionadas à parentesco podem ser removidas do modelo sem nenhum impacto na predição.
+
+- **Validação Cruzada:** Para garantir que não há *overfitting* no modelo, poderia ser feito um teste de validação cruzada.
 
 #### Considerações finais
 
