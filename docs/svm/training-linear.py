@@ -41,4 +41,8 @@ acc = accuracy_score(y_test, y_pred)
 print("Acurácia do LinearSVC:", acc)
 
 print("\nRelatório de Classificação:\n")
-print(classification_report(y_test, y_pred))
+
+report_dict = classification_report(y_test, y_pred, output_dict=True)
+report_df = pd.DataFrame(report_dict).transpose()
+
+print(report_df.round(2).to_markdown())
